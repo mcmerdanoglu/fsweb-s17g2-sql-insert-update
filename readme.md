@@ -120,9 +120,10 @@ Aşağıda istenilen sonuçlara ulaşabilmek için gerekli SQL sorgularını yaz
     	 SELECT * FROM kitap WHERE yazarno IN (SELECT yazarno FROM yazar WHERE yazarad LIKE 'E%');
 
     24) Kitap okumayan öğrencileri listeleyiniz.
-
+    	SELECT * FROM ogrenci WHERE ogrno NOT IN (SELECT ogrno FROM islem);
 
     25) Okunmayan kitapları listeleyiniz
-
+    	SELECT * FROM kitap WHERE kitapno NOT IN (SELECT kitapno FROM islem);
 
     26) Mayıs ayında okunmayan kitapları listeleyiniz.
+    	SELECT * FROM kitap WHERE kitapno NOT IN (SELECT kitapno FROM islem WHERE vtarih LIKE '____05%' );
