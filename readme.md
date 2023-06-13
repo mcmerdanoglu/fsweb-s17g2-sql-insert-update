@@ -110,6 +110,33 @@ Aşağıda istenilen sonuçlara ulaşabilmek için gerekli SQL sorgularını yaz
     	$BODY$;
 
     21) Daha önceden oluşturduğunu tüm prosedürleri silin.
+    	CREATE OR REPLACE PROCEDURE delete_procedures()
+    	LANGUAGE 'sql'
+    	AS $BODY$
+    	DECLARE
+    	procedure_name TEXT;
+    	BEGIN
+    	-- Get the list of procedure names to delete
+    	SELECT proname INTO procedure_name
+    	FROM pg_catalog.pg_proc
+    	WHERE proname <> 'delete_procedures';  -- Exclude this procedure itself
+
+    	-- Loop through each procedure name and drop it
+    	WHILE procedure_name IS NOT NULL LOOP
+        EXECUTE 'DROP PROCEDURE IF EXISTS ' || procedure_name;
+        RAISE NOTICE 'Procedure "%"', procedure_name, ' has been deleted.';
+
+        -- Get the next procedure name
+        SELECT proname INTO procedure_name
+        FROM pg_catalog.pg_proc
+        WHERE proname > procedure_name
+        ORDER BY proname ASC
+        LIMIT 1;
+    	END LOOP;
+
+    	RAISE NOTICE 'All procedures have been deleted.';
+    	END;
+    	$BODY$;
 
 
     #Esnek görevler (Esnek görevlerin hepsini Select in Select ile gerçekleştirmeniz beklenmektedir.)
